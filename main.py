@@ -3,12 +3,13 @@ import random
 import requests
 from bs4 import BeautifulSoup
 
+
 def quote_guesser():
     quotes_data = pandas.read_csv("quotes.csv")
     num_quotes = len(quotes_data.index)
 
     # Get random quote
-    rand_index = random.randint(1,num_quotes-1)
+    rand_index = random.randint(1, num_quotes - 1)
     rand_quote = quotes_data.iloc[rand_index]
     print(rand_quote.Author)
     # Create hints
@@ -28,21 +29,26 @@ def quote_guesser():
     for name_part in rand_quote.Author.split():
         hint_3 = hint_3.replace(name_part, "X")
     hints.append(hint_3)
+    # Gameplay
     guesses = 0
     print(rand_quote.Text)
     player_guess = input("Who said this? ")
     while (player_guess.lower() != rand_quote.Author.lower()) and (guesses < 3):
         guesses += 1
         print("Here's a hint:")
-        print(hints[guesses-1])
-        print(f"Guesses remaining: {4-guesses}")
-        player_guess = input(f"Who was it? ")
+        print(hints[guesses - 1])
+        print(f"Guesses remaining: {4 - guesses}")
+        player_guess = input("Who was it? ")
     if player_guess.lower() == rand_quote.Author.lower():
         print("Correct!")
     else:
-        print("You're out of guesses...")
-    go_again = input("Do you want to play again? (y/n): ")
-    if go_again.lower() == "y":
+        print(f"You're out of guesses... The answer was {rand_quote.Author}.")
+    go_again = ''
+    while go_again not in ["yes", "y", "no", "n"]:
+        go_again = input("Do you want to play again? (y/n): ")
+    if go_again.lower() in ["y", "yes"]:
         quote_guesser()
+    else:
+        print("Ok, bye!")
 
 quote_guesser()
